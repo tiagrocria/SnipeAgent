@@ -22,7 +22,7 @@
 You will need a working [Snipe-IT](https://snipeitapp.com/) database with API access and an API key. 
 *We recommend creating a separate user for the agent with minimal (read + add) permissions.*
 
-You can run it via a GPO or Scheduled task (recommended way is to run the agent once on boot with a delay of 1+ minute)
+You can run it via a GPO or Scheduled task (recommended way is to run the agent once on boot with a delay of 1+ minute).  Note:  Currently investigating running as service using http://nssm.cc/description. 
 
 ## Developer Guide
 
@@ -43,10 +43,10 @@ We welcome community participation in this project. Please submit an issue or pu
 This project is licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0)
 
 ## Planned features
-[] Install as Windows Service
-[] Collect API Key and other information during setup, allow parameter passthrough during install to .msi for distribution through SCCM and other software management tools
+• Install as Windows Service
+• Collect API Key and other information during setup, allow parameter passthrough during install to .msi for distribution through SCCM and other software management tools
 
 ## Acknowledgments
- * The project is based on [SnipeAgent] https://github.com/Scope-IT/SnipeAgent by [Daniel Hogg](https://github.com/danielhogg)
- * The project is based on [SnipeSharp API](https://github.com/cnitschkowski/SnipeSharp) by [barrycarey](https://github.com/barrycarey) and [cnitschkowski](https://github.com/cnitschkowski) with modifications by [velaar](https://github.com/velaar)
- * Snipe-IT 4.0+ is required for proper operation
+• The project is based on [SnipeAgent] https://github.com/Scope-IT/SnipeAgent by [Daniel Hogg](https://github.com/danielhogg)
+• The project is based on [SnipeSharp API](https://github.com/cnitschkowski/SnipeSharp) by [barrycarey](https://github.com/barrycarey) and [cnitschkowski](https://github.com/cnitschkowski) with modifications by [velaar](https://github.com/velaar)
+• Snipe-IT is required for proper operation, tested on v5.0+
