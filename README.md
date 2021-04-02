@@ -43,10 +43,10 @@ We welcome community participation in this project. Please submit an issue or pu
 This project is licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0)
 
 ## Planned features
-• Install as Windows Service
-• Collect API Key and other information during setup, allow parameter passthrough during install to .msi for distribution through SCCM and other software management tools
+* Install as Windows Service
+* Collect API Key and other information during setup, allow parameter passthrough during install to .msi for distribution through SCCM and other software management tools
 
 ## Acknowledgments
-• The project is based on [SnipeAgent] https://github.com/Scope-IT/SnipeAgent by [Daniel Hogg](https://github.com/danielhogg)
-• The project is based on [SnipeSharp API](https://github.com/cnitschkowski/SnipeSharp) by [barrycarey](https://github.com/barrycarey) and [cnitschkowski](https://github.com/cnitschkowski) with modifications by [velaar](https://github.com/velaar)
-• Snipe-IT is required for proper operation, tested on v5.0+
+* The project is based on [SnipeAgent] https://github.com/Scope-IT/SnipeAgent by [Daniel Hogg](https://github.com/danielhogg)
+* The project is based on [SnipeSharp API](https://github.com/cnitschkowski/SnipeSharp) by [barrycarey](https://github.com/barrycarey) and [cnitschkowski](https://github.com/cnitschkowski) with modifications by [velaar](https://github.com/velaar)
+* Snipe-IT is required for proper operation, tested on v5.0+
