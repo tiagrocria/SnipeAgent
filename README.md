@@ -2,7 +2,7 @@
 
 ## Installation
 1. Download and install the latest .msi installer from the [releases tab](https://github.com/ReticentRobot/SnipeAgent/releases).
-2. By default, the program will be installed in Program Files (x86)/Scope-IT/SnipeAgent. Edit the SnipeAgent.exe.config file to include your API key and BaseURI from the default values to the ones given by your Snipe-IT instance.
+2. By default, the program will be installed in Program Files (x86)/Snipe-IT/SnipeAgent. Edit the SnipeAgent.exe.config file to include your API key and BaseURI from the default values to the ones given by your Snipe-IT instance.
 3. Set the Company and Location parameters in SnipeAgent.exe.config, then run the .exe.
 
 ## Features
