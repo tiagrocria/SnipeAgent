@@ -20,6 +20,27 @@ namespace SnipeAgent
         public Dictionary<string, string> SystemTypes;
     }
 
+    public static class Conversor
+    {
+        public static string FormatBytes(long bytes)
+        {
+            string[] Suffix = { "B", "KB", "MB", "GB", "TB" };
+            int i;
+            double dblSByte = bytes;
+            for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+            {
+                dblSByte = bytes / 1024.0;
+            }
+
+            return String.Format("{0:0.##} {1}", dblSByte, Suffix[i]);
+        }
+
+        public static string FormatDate(DateTime date)
+        {
+            return String.Format("{0:dd/MM/yyyy HH:mm:ss}", date);
+        }
+    }
+
     public class WindowsSystemTypes : PCSystemTypes
     {
         public WindowsSystemTypes()
@@ -124,8 +145,34 @@ namespace SnipeAgent
             string systemName = GetOutputVariable("Win32_ComputerSystem.Name");
             string serialNumber = GetOutputVariable("Win32_ComputerSystemProduct.IdentifyingNumber");
             string macAddress = GetOutputVariable("Win32_NetworkAdapter.MACAddress");
+            string cpuName = GetOutputVariable("Win32_Processor.Name");
+            string ramMemory = Conversor.FormatBytes((long)Convert.ToDouble(GetOutputVariable("Win32_ComputerSystem.TotalPhysicalMemory")));
+            string ipAddress = GetOutputVariable("Win32_NetworkAdapterConfiguration.IPAddress");
+            string domain = GetOutputVariable("Win32_ComputerSystem.Domain");
+            string lastUser = GetOutputVariable("Win32_ComputerSystem.UserName");
+            string osserial = GetOutputVariable("Win32_OperatingSystem.SerialNumber");
+            string osbuildnro = GetOutputVariable("Win32_OperatingSystem.BuildNumber");
+            string osname = GetOutputVariable("Win32_OperatingSystem.Name").Split('|')[0];
+            //string osinstalldate = Conversor.FormatDate(Convert.ToDateTime(GetOutputVariable("Win32_OperatingSystem.InstallDate")));
+            DateTime osinstalldate = System.Management.ManagementDateTimeConverter.ToDateTime(GetOutputVariable("Win32_OperatingSystem.InstallDate"));
+            string storageAmount = Conversor.FormatBytes((long)Convert.ToDouble(GetOutputVariable("Win32_DiskDrive.Size")));
+            
+
+
             Dictionary<string, string> customFields = new Dictionary<string, string>();
-            customFields.Add("_snipeit_mac_address_1", macAddress);
+            customFields.Add("_snipeit_mac_address_2", macAddress);
+            customFields.Add("_snipeit_cpu_4", cpuName);
+            customFields.Add("_snipeit_ram_5", ramMemory);
+            customFields.Add("_snipeit_ip_address_8", ipAddress);
+            customFields.Add("_snipeit_dnsdomain_9", domain);
+            customFields.Add("_snipeit_osserial_10", osserial);
+            customFields.Add("_snipeit_storage_11", storageAmount);
+            customFields.Add("_snipeit_lastuser_12", lastUser);
+            customFields.Add("_snipeit_osname_13", osname);
+            customFields.Add("_snipeit_osbuildnumber_14", osbuildnro);
+            customFields.Add("_snipeit_osinstalldate_15", osinstalldate.ToString("dd/MM/yyyy HH:mm:ss"));
+
+
             string warrantyMonths = appSettings["WarrantyMonths"];
 
             bool isInteractive = false;
@@ -197,6 +244,13 @@ namespace SnipeAgent
                         if  (!String.IsNullOrWhiteSpace(property.Value.ToString()))
                         {
                             propertyValue = property.Value.ToString().Trim();
+
+                            if (property.Name == "IPAddress" && property.Value !=null)
+                            {
+                                String[] addresses = (String[])property.Value;
+                                propertyValue = addresses[0];
+                            }
+                        
                         }
                         if (!resultDictionary.ContainsKey(selectQuery.ClassName + "." + property.Name))
                         {
@@ -315,15 +369,16 @@ namespace SnipeAgent
             Sentry mySentry = new Sentry(appSettings); // creating new Sentry (we can have multiple for parallel execution at a later point)
 
             // Adding what we want
-            mySentry.AddQuery("WMI", "SELECT Name, Manufacturer, Model, PCSystemType FROM Win32_ComputerSystem");
+            mySentry.AddQuery("WMI", "SELECT Name, Domain, Manufacturer, Model, TotalPhysicalMemory, UserName, PCSystemType FROM Win32_ComputerSystem");
             mySentry.AddQuery("WMI", "SELECT IdentifyingNumber FROM Win32_ComputerSystemProduct");
             mySentry.AddQuery("WMI", "SELECT Name FROM Win32_BIOS");
             mySentry.AddQuery("WMI", "SELECT Manufacturer,Name,MACAddress FROM Win32_NetworkAdapter WHERE NetEnabled=true AND AdapterTypeId=0 AND netConnectionStatus=2");
-            mySentry.AddQuery("WMI", "SELECT Manufacturer,Model,SerialNumber FROM Win32_DiskDrive WHERE Index=0");
-            mySentry.AddQuery("WMI", "SELECT EndingAddress FROM Win32_MemoryArray");
+            mySentry.AddQuery("WMI", "SELECT Manufacturer,Model,SerialNumber, Size FROM Win32_DiskDrive WHERE Index=0");
             mySentry.AddQuery("WMI", "SELECT Name FROM Win32_DesktopMonitor");
             mySentry.AddQuery("WMI", "SELECT Manufacturer,Product,SerialNumber FROM Win32_BaseBoard");
             mySentry.AddQuery("WMI", "SELECT Name,NumberOfCores,NumberOfLogicalProcessors FROM Win32_Processor");
+            mySentry.AddQuery("WMI", "SELECT IPAddress from Win32_NetworkAdapterConfiguration WHERE IPEnabled=true");
+            mySentry.AddQuery("WMI", "SELECT BuildNumber,InstallDate,LocalDateTime,Name,SerialNumber, Version from Win32_OperatingSystem");
 
             bool getOU = false;
             bool getOUSuccess = Boolean.TryParse(appSettings["OUEnabled"], out getOU);
